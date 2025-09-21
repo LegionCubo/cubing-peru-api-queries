@@ -8,14 +8,19 @@ cats = ["222","333","333bf", "333fm", "333ft", "333mbf", "333mbo", "333oh","444"
 
 input_file = "./../cubing-peru-api-v0/Results/results.json"
 competitions_file = "./../cubing-peru-api-v0/Competitions/competitions.json"
+persons_file = "./../cubing-peru-api-v0/Persons/persons.json"
 
-# 📌 Cargar competiciones en memoria para lookup rápido
+# 📌 Cargar competiciones en memoria
 with open(competitions_file, "r", encoding="utf-8") as f:
     competitions = {c["id"]: c for c in json.load(f)}
 
+# 📌 Cargar personas en memoria (lookup por personId)
+with open(persons_file, "r", encoding="utf-8") as f:
+    persons = {p["id"]: p for p in json.load(f)}
 
 folder = f"./../cubing-peru-api-v0/Results/average"
 os.makedirs(folder, exist_ok=True)
+
 for cat in cats:
     output_file = f"{folder}/{cat}.json"
 
@@ -25,25 +30,29 @@ for cat in cats:
             if record.get("eventId") == cat:
                 avg = int(record.get("average", -1))
 
-                # 📌 ignorar los -1
+                # 📌 ignorar -1 y 0
                 if avg in (-1, 0):
                     continue
 
                 comp_id = record.get("competitionId")
                 comp = competitions.get(comp_id, {})
 
-                # añadir datos extra de competition
+                # añadir datos de competition
                 record["competitionName"] = comp.get("name", "")
                 record["cityName"] = comp.get("cityName", "")
-                record["competitionDate"] = f"{comp.get('year','')}-{comp.get('month','')}-{comp.get('day','')}"
+                record["competitionDate"] = comp.get("competitionDate", "")
+
+                # añadir datos de persona
+                pid = record.get("personId")
+                record["gender"] = persons.get(pid, {}).get("gender", "")
 
                 filtered_records.append(record)
 
-    # 📌 ordenar: primero por best, si empatan usar fecha
+    # 📌 ordenar: primero por average, si empatan usar fecha
     def sort_key(r):
-        best = int(r.get("average", 99999999999999))
+        avg = int(r.get("average", 99999999999999))
         date = r.get("competitionDate", "9999-99-99")
-        return (best, date)
+        return (avg, date)
 
     filtered_records.sort(key=sort_key)
 
@@ -52,4 +61,3 @@ for cat in cats:
         json.dump(filtered_records, out, ensure_ascii=False, indent=2)
 
     print(f"✅ Listo, datos filtrados de la categoría: {cat}")
-

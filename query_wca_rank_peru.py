@@ -3,6 +3,11 @@ import os
 
 cats = ["222","333","333bf", "333fm", "333ft", "333mbf", "333mbo", "333oh","444", "444bf", "555", "555bf", "666", "777", "clock", "magic", "minx", "mmagic", "pyram", "skewb", "sq1"]
 
+# 📌 Cargar persons en memoria (para lookup rápido)
+persons_file = "./../cubing-peru-api-v0/Persons/persons.json"
+with open(persons_file, "r", encoding="utf-8") as f:
+    persons = {p["id"]: p for p in json.load(f)}
+
 def make_ranking(input_folder, output_folder, field):
     os.makedirs(output_folder, exist_ok=True)
 
@@ -24,6 +29,10 @@ def make_ranking(input_folder, output_folder, field):
                     # si no existe o es mejor → guardamos todo el record
                     if pid not in best_by_person or value < int(best_by_person[pid].get(field, float("inf"))):
                         best_by_person[pid] = record
+
+                        # añadir gender desde persons.json
+                        person = persons.get(pid, {})
+                        record["gender"] = person.get("gender", "")
 
         # ranking = todos los mejores records
         ranking = list(best_by_person.values())
