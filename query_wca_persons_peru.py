@@ -27,6 +27,10 @@ with open(input_persons, "rb") as f, open(output_file, "w", encoding="utf-8") as
             pid = record.get("id")
             record["competitions"] = len(competitions_by_person.get(pid, []))  # contar comps
 
+            # Eliminar los campos originales
+            for key in ["subid"]:
+                record.pop(key, None)
+
             if not first:
                 out.write(",\n")
             json.dump(record, out, ensure_ascii=False)

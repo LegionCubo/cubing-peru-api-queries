@@ -7,7 +7,7 @@ from datetime import date
 cats = ["222","333","333bf", "333fm", "333ft", "333mbf", "333mbo", "333oh","444", "444bf", "555", "555bf", "666", "777", "clock", "magic", "minx", "mmagic", "pyram", "skewb", "sq1"]
 
 input_file = "./../cubing-peru-api-v0/Results/results.json"
-competitions_file = "./../cubing-peru-api-v0/Competitions/competitions.json"
+competitions_file = "./../cubing-peru-api-v0/Competitions/competitions_prueba.json"
 persons_file = "./../cubing-peru-api-v0/Persons/persons.json"
 
 # 📌 Cargar competiciones en memoria para lookup rápido

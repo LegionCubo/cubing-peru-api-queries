@@ -3,7 +3,7 @@ import ijson
 
 persons_file = "./../cubing-peru-api-v0/Persons/persons.json"
 results_file = "./../cubing-peru-api-v0/Results/results.json"
-competitions_file = "./../cubing-peru-api-v0/Competitions/competitions.json"
+competitions_file = "./../cubing-peru-api-v0/Competitions/competitions_prueba.json"
 
 # 📌 Cargar persons y competitions
 with open(persons_file, "r", encoding="utf-8") as f:
@@ -34,7 +34,6 @@ with open(results_file, "rb") as f:
             last_competition[pid] = {
                 "competitionId": comp_id,
                 "competitionName": comp.get("name", ""),
-                "cityName": comp.get("cityName", ""),
                 "competitionDate": comp_date,
             }
 

@@ -4,9 +4,8 @@ import re
 from datetime import datetime
 
 # Archivos de entrada/salida
-persons_file = "./../cubing-peru-api-v0/Persons/persons.json"
+persons_file = "./salida_json/WCA_export_Persons.json"
 competitions_file = "./salida_json/WCA_export_Competitions.json"
-results_file = "./../cubing-peru-api-v0/Results/results.json"
 output_file = "./../cubing-peru-api-v0/Competitions/competitions.json"
 
 # Cargar personas (para mapear nombres → IDs en organiser/delegate)
@@ -19,14 +18,6 @@ pattern = re.compile(r"\{\s*([^}]+)\}\{[^}]+\}")
 
 competitions = {}
 peruvian_competitions = set()
-
-# 📌 Paso 1: leer results.json y detectar competencias con peruanos
-with open(results_file, "rb") as rf:
-    for record in ijson.items(rf, "item"):
-        if record.get("personCountryId") == "Peru":  # 🔥 más directo
-            comp_id = record.get("competitionId")
-            if comp_id:
-                peruvian_competitions.add(comp_id)
 
 # 📌 Paso 2: leer competitions y filtrar
 with open(competitions_file, "rb") as f:
@@ -49,7 +40,7 @@ with open(competitions_file, "rb") as f:
         # Guardar solo si:
         # 1. Tiene organizadores/delegados peruanos
         # 2. O hubo participación de peruanos
-        if organisers_ids or delegates_ids or comp_id in peruvian_competitions:
+        if record.get("countryId") == "Peru" and record.get("cancelled") != "1":
             # Construir competitionDate
             year = record.get("year")
             month = record.get("month")
@@ -61,7 +52,7 @@ with open(competitions_file, "rb") as f:
             competition_end_date = f"{year}-{int(endMonth):02d}-{int(endDay):02d}"
 
             # Eliminar los campos originales
-            for key in ["year", "month", "day", "endMonth", "endDay"]:
+            for key in ["year", "month", "day", "endMonth", "endDay", "information", "external_website", "cancelled"]:
                 record.pop(key, None)
 
             # Añadir nuevos campos
@@ -82,4 +73,4 @@ competitions.sort(key=lambda x: datetime.strptime(x["competitionDate"], "%Y-%m-%
 with open(output_file, "w", encoding="utf-8") as out:
     json.dump(competitions, out, ensure_ascii=False, indent=2)
 
-print("✅ Listo, ahora incluye todas las competencias donde participaron cuberos peruanos, además de organizadas/delegadas")
+print("✅ Listo, todas las competencias de peru")
