@@ -38,7 +38,7 @@ with open(results_file, "rb") as f:
             }
 
         # ---- Contar podios (total) ----
-        if round_type in ("f", "c") and pos in ("1", "2", "3"):
+        if round_type in ("f", "c") and pos in ("1", "2", "3") and record.get("best") not in ("-1", "0"):
             podiums[pid] += 1
 
 # 📌 Actualizar persons.json

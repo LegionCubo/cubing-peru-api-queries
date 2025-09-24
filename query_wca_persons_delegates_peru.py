@@ -4,7 +4,7 @@ from datetime import datetime
 
 # Archivos de entrada/salida
 persons_file = "./../cubing-peru-api-v0/Persons/persons.json"
-competitions_file = "./../cubing-peru-api-v0/Competitions/competitions.json"
+competitions_file = "./../cubing-peru-api-v0/Competitions/competitions_prueba.json"
 output_file = "./../cubing-peru-api-v0/Persons/Delegates/delegates.json"
 
 # Fecha actual

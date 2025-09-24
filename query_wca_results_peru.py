@@ -9,7 +9,7 @@ with open(input_file, "rb") as f, open(output_file, "w", encoding="utf-8") as ou
     out.write("[\n")
     first = True
     for record in ijson.items(f, "item"):  # cada objeto del array principal
-        if record.get("personCountryId") == "Peru" and record.get("best") != "-1":
+        if record.get("personCountryId") == "Peru":
             if not first:
                 out.write(",\n")
             json.dump(record, out, ensure_ascii=False)

@@ -28,6 +28,13 @@ for cat in cats:
     with open(input_file, "rb") as f:
         for record in ijson.items(f, "item"):
             if record.get("eventId") == cat:
+
+                single = int(record.get("best", -1))
+
+                # 📌 ignorar -1 y 0
+                if single in (-1, 0):
+                    continue
+
                 comp_id = record.get("competitionId")
                 comp = competitions.get(comp_id, {})
 
