@@ -6,7 +6,7 @@ import json
 import os
 
 # URL del ZIP
-url = "https://assets.worldcubeassociation.org/export/results/WCA_export260_20250917T000011Z.tsv.zip"
+url = "https://assets.worldcubeassociation.org/export/results/WCA_export269_20250926T000022Z.tsv.zip"
 
 # Carpeta de salida
 output_dir = "salida_json"

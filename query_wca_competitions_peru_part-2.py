@@ -67,7 +67,7 @@ with open(competitions_file, "rb") as f:
 
 # 📌 Paso 3: ordenar por fecha
 competitions = list(competitions.values())
-competitions.sort(key=lambda x: datetime.strptime(x["competitionDate"], "%Y-%m-%d"))
+competitions.sort(key=lambda x: datetime.strptime(x["competitionDate"], "%Y-%m-%d"), reverse=True)
 
 # Guardar JSON
 with open(output_file, "w", encoding="utf-8") as out:
