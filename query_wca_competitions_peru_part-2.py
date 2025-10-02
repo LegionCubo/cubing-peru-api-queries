@@ -28,12 +28,22 @@ with open(competitions_file, "rb") as f:
         # Procesar organisers
         if record.get("organiser"):
             names = pattern.findall(record["organiser"])
-            organisers_ids = [name_to_id[n] for n in names if n in name_to_id]
+            organisers = [
+                {"id": name_to_id[n], "name": n} if n in name_to_id else {"name": n}
+                for n in names
+            ]
+        else:
+            organisers = []
 
         # Procesar wcaDelegates
         if record.get("wcaDelegate"):
             names = pattern.findall(record["wcaDelegate"])
-            delegates_ids = [name_to_id[n] for n in names if n in name_to_id]
+            delegates = [
+                {"id": name_to_id[n], "name": n} if n in name_to_id else {"name": n}
+                for n in names
+            ]
+        else:
+            delegates = []
 
         comp_id = record.get("id")
 
@@ -60,8 +70,8 @@ with open(competitions_file, "rb") as f:
             record["competitionEndDate"] = competition_end_date
 
             # Reemplazar organisers y delegates
-            record["organiser"] = organisers_ids
-            record["wcaDelegate"] = delegates_ids
+            record["organiser"] = organisers
+            record["wcaDelegate"] = delegates
 
             competitions[comp_id] = record  # evitar duplicados
 
