@@ -35,6 +35,7 @@ with open(results_file, "rb") as f:
                 "competitionId": comp_id,
                 "competitionName": comp.get("name", ""),
                 "competitionDate": comp_date,
+                "competitionCountryIso": comp.get("countryIso")
             }
 
         # ---- Contar podios (total) ----

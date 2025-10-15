@@ -49,6 +49,7 @@ for comp in competitions:
                     "competitionId": comp_id,
                     "competitionName": comp_name,
                     "competitionDate": comp_date_str,
+                    "competitionCountryIso": comp["countryIso"]
                 }
 
 # Crear salida final

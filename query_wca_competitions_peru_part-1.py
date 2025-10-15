@@ -9,10 +9,15 @@ competitions_file = "./salida_json/WCA_export_Competitions.json"
 results_file = "./../cubing-peru-api-v0/Results/results.json"
 output_file = "./../cubing-peru-api-v0/Competitions/competitions_prueba.json"
 
+countriesFile = "./salida_json/WCA_export_Countries.json"
+
 # Cargar personas (para mapear nombres → IDs en organiser/delegate)
 with open(persons_file, "r", encoding="utf-8") as pf:
     persons = json.load(pf)
 name_to_id = {p["name"]: p["id"] for p in persons}
+
+with open(countriesFile, "r", encoding="utf-8") as f:
+    countries = {p["id"]: p for p in json.load(f)}
 
 # Regex para extraer nombres dentro de [{Nombre}{correo}]
 pattern = re.compile(r"\{\s*([^}]+)\}\{[^}]+\}")
@@ -73,6 +78,11 @@ with open(competitions_file, "rb") as f:
             record["wcaDelegate"] = delegates_ids
 
             competitions[comp_id] = record  # evitar duplicados
+
+            #REGISTRAR ISO
+            countryId = record.get("countryId")
+            country = countries.get(countryId, {})
+            record["countryIso"] = country.get("iso2", "")
 
 # 📌 Paso 3: ordenar por fecha
 competitions = list(competitions.values())

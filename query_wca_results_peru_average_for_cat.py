@@ -41,6 +41,7 @@ for cat in cats:
                 record["competitionName"] = comp.get("name", "")
                 record["cityName"] = comp.get("cityName", "")
                 record["competitionDate"] = comp.get("competitionDate", "")
+                record["competitionCountryIso"] = comp.get("countryIso","")
 
                 # añadir datos de persona
                 pid = record.get("personId")

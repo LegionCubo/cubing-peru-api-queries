@@ -42,6 +42,7 @@ for cat in cats:
                 record["competitionName"] = comp.get("name", "")
                 record["cityName"] = comp.get("cityName", "")
                 record["competitionDate"] = comp.get("competitionDate", "")
+                record["competitionCountryIso"] = comp.get("countryIso","")
 
                 # añadir gender desde persons.json
                 pid = record.get("personId")
