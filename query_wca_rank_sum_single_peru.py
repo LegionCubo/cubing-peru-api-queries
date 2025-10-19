@@ -65,6 +65,7 @@ for pid in persons:
                 "eventId": cat,
                 "best": record.get("best"),
                 "competitionId": record.get("competitionId"),
+                "competitionName": record.get("competitionName"),
                 "cityName": record.get("cityName"),
                 "roundTypeId": record.get("roundTypeId"),
                 "countryRank": int(country_rank) if country_rank else None
@@ -81,6 +82,7 @@ for pid in persons:
                 "eventId": cat,
                 "best": None,
                 "competitionId": None,
+                "competitionName": None,
                 "cityName": None,
                 "roundTypeId": None,
                 "countryRank": simulated_rank
