@@ -14,6 +14,7 @@ scripts = [
     "query_wca_persons_peru_segundo_paso.py",
     "query_wca_persons_delegates_peru.py",
     "query_wca_persons_organisers_peru.py",
+    "query_wca_records_peru.py",
 ]
 
 for script in scripts:

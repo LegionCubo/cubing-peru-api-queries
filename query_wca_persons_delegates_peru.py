@@ -34,10 +34,11 @@ for comp in competitions:
     comp_date = datetime.strptime(comp_date_str, "%Y-%m-%d").date()
 
     for wcaDelegate_id in comp.get("wcaDelegate", []):
-        wcaDelegate_count[wcaDelegate_id] += 1
-
+        
         # Solo considerar si ya ocurrió
         if comp_date <= today:
+            wcaDelegate_count[wcaDelegate_id] += 1
+
             if (
                 wcaDelegate_id not in last_delegate_competition
                 or comp_date > datetime.strptime(last_delegate_competition[wcaDelegate_id]["competitionDate"], "%Y-%m-%d").date()

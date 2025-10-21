@@ -2,7 +2,7 @@ import json
 import os
 
 # Categorías conocidas
-cats = ["222","333","333bf","333fm","333oh","444","444bf","555","555bf","666","777","clock","minx","pyram","skewb","sq1"]
+cats = ["222","333","333bf","333fm","333oh","444","444bf","555","555bf","666","777","clock","minx","pyram","skewb","sq1", "333mbf"]
 
 # Directorios base
 BASE_DIR = "./../cubing-peru-api-v0/Rankings"
@@ -25,6 +25,7 @@ def get_best(data):
         "average": best.get("average"),
         "competitionId": best.get("competitionId"),
         "competitionName": best.get("competitionName"),
+        "competitionCountryIso": best.get("competitionCountryIso"),
         "gender": best.get("gender"),
         "times": [
             best.get("value1"),
@@ -47,6 +48,7 @@ def get_best_by_gender(data, gender, mode):
         mode: best.get(mode),
         "competitionId": best.get("competitionId"),
         "competitionName": best.get("competitionName"),
+        "competitionCountryIso": best.get("competitionCountryIso"),
         "times": [
             best.get("value1"),
             best.get("value2"),
@@ -86,6 +88,7 @@ def build_best_records():
                 "best": best_single["best"],
                 "competitionId": best_single["competitionId"],
                 "competitionName": best_single["competitionName"],
+                "competitionCountryIso": best_single["competitionCountryIso"],
                 "times": best_single["times"],
             }
 
@@ -98,6 +101,7 @@ def build_best_records():
                 "average": best_average["average"],
                 "competitionId": best_average["competitionId"],
                 "competitionName": best_average["competitionName"],
+                "competitionCountryIso": best_average["competitionCountryIso"],
                 "times": best_average["times"],
             }
 

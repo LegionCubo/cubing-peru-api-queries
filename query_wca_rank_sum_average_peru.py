@@ -74,8 +74,7 @@ for pid in persons:
                 "best": record.get("average"),
                 "competitionId": record.get("competitionId"),
                 "competitionName": record.get("competitionName"),
-                "cityName": record.get("cityName"),
-                "roundTypeId": record.get("roundTypeId"),
+                "competitionCountryIso": record.get("competitionCountryIso"),
                 "countryRank": int(country_rank) if country_rank else None,
                 "times": times
             })
@@ -92,8 +91,7 @@ for pid in persons:
                 "best": None,
                 "competitionId": None,
                 "competitionName": None,
-                "cityName": None,
-                "roundTypeId": None,
+                "competitionCountryIso": None,
                 "countryRank": simulated_rank,
                 "times": []
             })

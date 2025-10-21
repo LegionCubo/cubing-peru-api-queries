@@ -37,10 +37,12 @@ for comp in competitions:
     comp_date = datetime.strptime(comp_date_str, "%Y-%m-%d").date()
 
     for organiser_id in comp.get("organiser", []):
-        organiser_count[organiser_id] += 1
+        
 
         # Solo considerar comps que ya ocurrieron
         if comp_date <= today:
+            organiser_count[organiser_id] += 1
+            
             if (
                 organiser_id not in last_organiser_competition
                 or comp_date > datetime.strptime(last_organiser_competition[organiser_id]["competitionDate"], "%Y-%m-%d").date()
