@@ -1,0 +1,152 @@
+import json
+import os
+
+# ---------------- CONFIG ----------------
+
+cats = [
+    "222","333","333bf","333fm","333oh",
+    "444","444bf","555","555bf",
+    "666","777","clock","minx","pyram","skewb","sq1","333mbf"
+]
+
+single_events = ["333bf", "444bf", "555bf", "333fm", "333mbf"]
+
+rankings_avg_folder = "./../cubing-peru-api-v0/Rankings/average"
+rankings_single_folder = "./../cubing-peru-api-v0/Rankings/single"
+output_file = "./../cubing-peru-api-v0/KinchRank/results_kinch_rank.json"
+
+# ---------------- HELPERS ----------------
+
+def load_json(path):
+    if os.path.exists(path):
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return []
+
+def safe_int(v):
+    try:
+        return int(v)
+    except:
+        return None
+
+# ---------------- LOAD ----------------
+
+rankings_avg = {cat: load_json(f"{rankings_avg_folder}/{cat}.json") for cat in cats}
+rankings_single = {cat: load_json(f"{rankings_single_folder}/{cat}.json") for cat in cats}
+
+# ---------------- BASES (NR Perú) ----------------
+
+event_bases = {}
+
+for cat in cats:
+    if cat in single_events:
+        data = rankings_single[cat]
+        if data:
+            b = safe_int(data[0].get("best"))
+            if b:
+                event_bases[cat] = b
+    else:
+        data = rankings_avg[cat]
+        if data:
+            b = safe_int(data[0].get("average"))
+            if b:
+                event_bases[cat] = b
+
+# ---------------- PERSONAS ----------------
+
+persons = set()
+for cat in cats:
+    for r in rankings_avg.get(cat, []):
+        if r.get("personId"):
+            persons.add(r["personId"])
+    for r in rankings_single.get(cat, []):
+        if r.get("personId"):
+            persons.add(r["personId"])
+
+# ---------------- CALCULO ----------------
+
+results = []
+
+for pid in persons:
+    person_name = ""
+    gender = ""
+    country = ""
+
+    kinchSum = 0.0
+    categories = []
+
+    for cat in cats:
+        base = event_bases.get(cat)  # NR
+
+        record = None
+        personal = None
+
+        if cat in single_events:
+            recs = [r for r in rankings_single[cat] if r["personId"] == pid]
+            if recs:
+                record = recs[0]
+                personal = safe_int(record.get("best"))
+        else:
+            recs = [r for r in rankings_avg[cat] if r["personId"] == pid]
+            if recs:
+                record = recs[0]
+                personal = safe_int(record.get("average"))
+
+        # Guardar nombre de una vez
+        if record and not person_name:
+            person_name = record.get("personName", "")
+            gender = record.get("gender", "")
+            country = record.get("competitionCountryIso", "")
+
+        # ---- kinch por evento ----
+        kinch_event = 0.0
+        if base and personal and personal > 0:
+            if cat == "333mbf":
+                points_base = 99 - round(base / 10000000, 0)
+                points_personal = 99 - round(personal / 10000000, 0)
+
+                time_base = round(base / 100, 0) - (99 - points_base) * 100000
+                time_personal = round(personal / 100, 0) - (99 - points_personal) * 100000
+
+                prop_hour_left_base = 1 - time_base / 3600
+                prop_hour_left_personal = 1 - time_personal / 3600
+
+                kinch_event = round((points_personal + prop_hour_left_personal) / (points_base + prop_hour_left_base) * 100, 2)
+            else:
+                kinch_event = round((base / personal) * 100, 2)
+
+        kinchSum += kinch_event
+
+        categories.append({
+            "eventId": cat,
+            "best": str(personal) if personal else None,
+            "competitionId": record.get("competitionId") if record else None,
+            "competitionName": record.get("competitionName") if record else None,
+            "competitionCountryIso": record.get("competitionCountryIso") if record else None,
+            "countryRank": int(record.get("countryRank")) if record and record.get("countryRank") else None,
+            "kinch": kinch_event
+        })
+
+    kinchAvg = round(kinchSum / len(cats), 2)
+
+    if round(kinchSum, 2) != 0.0:
+        results.append({
+            "personName": person_name,
+            "personId": pid,
+            "gender": gender,
+            "countryIso": country,
+            "kinchAvg": kinchAvg,
+            "kinchSum": round(kinchSum, 2),
+            "categories": categories
+        })
+
+# ---------------- ORDENAR Y GUARDAR ----------------
+
+results.sort(key=lambda x: x["kinchAvg"], reverse=True)
+
+os.makedirs(os.path.dirname(output_file), exist_ok=True)
+
+with open(output_file, "w", encoding="utf-8") as f:
+    json.dump(results, f, ensure_ascii=False, indent=2)
+
+print("✅ Kinch Rank generado correctamente")
