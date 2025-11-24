@@ -11,6 +11,8 @@ cats = [
 
 single_events = ["333bf", "444bf", "555bf", "333fm", "333mbf"]
 
+single_or_mean = ["333bf", "444bf", "555bf", "333fm"]
+
 rankings_avg_folder = "./../cubing-peru-api-v0/Rankings/average"
 rankings_single_folder = "./../cubing-peru-api-v0/Rankings/single"
 output_file = "./../cubing-peru-api-v0/KinchRank/results_kinch_rank.json"
@@ -37,20 +39,19 @@ rankings_single = {cat: load_json(f"{rankings_single_folder}/{cat}.json") for ca
 # ---------------- BASES (NR Perú) ----------------
 
 event_bases = {}
+event_bases_mean = {}
 
 for cat in cats:
-    if cat in single_events:
-        data = rankings_single[cat]
-        if data:
-            b = safe_int(data[0].get("best"))
-            if b:
-                event_bases[cat] = b
-    else:
-        data = rankings_avg[cat]
-        if data:
-            b = safe_int(data[0].get("average"))
-            if b:
-                event_bases[cat] = b
+    data = rankings_single[cat]
+    if data:
+        b = safe_int(data[0].get("best"))
+        if b:
+            event_bases[cat] = b
+    data_mean = rankings_avg[cat]
+    if data_mean:
+        b = safe_int(data_mean[0].get("average"))
+        if b:
+            event_bases_mean[cat] = b
 
 # ---------------- PERSONAS ----------------
 
@@ -76,21 +77,33 @@ for pid in persons:
     categories = []
 
     for cat in cats:
-        base = event_bases.get(cat)  # NR
+        base = event_bases.get(cat)  # NR SINGLE
+        base_mean = event_bases_mean.get(cat)  # NR MEAN
 
         record = None
         personal = None
+        personal_mean = None
 
-        if cat in single_events:
+        if cat == '333mbf':
             recs = [r for r in rankings_single[cat] if r["personId"] == pid]
             if recs:
                 record = recs[0]
                 personal = safe_int(record.get("best"))
+        elif cat in single_or_mean:
+            recs_single = [r for r in rankings_single[cat] if r["personId"] == pid]
+            if recs_single:
+                record = recs_single[0]
+                personal = safe_int(record.get("best"))
+
+            recs = [r for r in rankings_avg[cat] if r["personId"] == pid]
+            if recs:
+                record = recs[0]
+                personal_mean = safe_int(record.get("average"))
         else:
             recs = [r for r in rankings_avg[cat] if r["personId"] == pid]
             if recs:
                 record = recs[0]
-                personal = safe_int(record.get("average"))
+                personal_mean = safe_int(record.get("average"))
 
         # Guardar nombre de una vez
         if record and not person_name:
@@ -100,8 +113,8 @@ for pid in persons:
 
         # ---- kinch por evento ----
         kinch_event = 0.0
-        if base and personal and personal > 0:
-            if cat == "333mbf":
+        if base:
+            if cat == "333mbf" and personal:
                 points_base = 99 - round(base / 10000000, 0)
                 points_personal = 99 - round(personal / 10000000, 0)
 
@@ -112,8 +125,14 @@ for pid in persons:
                 prop_hour_left_personal = 1 - time_personal / 3600
 
                 kinch_event = round((points_personal + prop_hour_left_personal) / (points_base + prop_hour_left_base) * 100, 2)
-            else:
-                kinch_event = round((base / personal) * 100, 2)
+            elif (cat in single_or_mean):
+                #VALIDAMOS EL MAS CERCANO A NR
+                if personal_mean and personal_mean > 0:
+                    kinch_event = max(round((base / personal) * 100, 2), round((base_mean / personal_mean) * 100, 2))
+                elif personal:
+                    kinch_event = round((base / personal) * 100, 2)
+            elif personal_mean and personal_mean > 0:
+                kinch_event = round((base_mean / personal_mean) * 100, 2)
 
         kinchSum += kinch_event
 
