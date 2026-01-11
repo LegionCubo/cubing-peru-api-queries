@@ -2,12 +2,12 @@ import json
 import ijson
 
 persons_file = "./../cubing-peru-api-v0/Persons/persons.json"
-results_file = "./../cubing-peru-api-v0/Results/results.json"
+results_file = "./../cubing-peru-api-v0/Results/merge_results.json"
 competitions_file = "./../cubing-peru-api-v0/Competitions/competitions_prueba.json"
 
 # 📌 Cargar persons y competitions
 with open(persons_file, "r", encoding="utf-8") as f:
-    persons = {p["id"]: p for p in json.load(f)}
+    persons = {p["wca_id"]: p for p in json.load(f)}
 
 with open(competitions_file, "r", encoding="utf-8") as f:
     competitions = {c["id"]: c for c in json.load(f)}
@@ -18,9 +18,9 @@ podiums = {pid: 0 for pid in persons}
 # 📌 Procesar results
 with open(results_file, "rb") as f:
     for record in ijson.items(f, "item"):
-        pid = record.get("personId")
-        comp_id = record.get("competitionId")
-        round_type = record.get("roundTypeId")
+        pid = record.get("person_id")
+        comp_id = record.get("competition_id")
+        round_type = record.get("round_type_id")
         pos = record.get("pos")
 
         if not pid or not comp_id:

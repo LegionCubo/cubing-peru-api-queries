@@ -6,7 +6,7 @@ cats = ["222","333","333bf", "333fm", "333mbf", "333oh","444", "444bf", "555", "
 
 # 📂 Paths
 rankings_folder = "./../cubing-peru-api-v0/Rankings/single"
-wca_ranks_file = "./salida_json/WCA_export_RanksSingle.json"
+wca_ranks_file = "./salida_json/WCA_export_ranks_single.json"
 persons_file = "./../cubing-peru-api-v0/Persons/persons.json"
 output_file = "./../cubing-peru-api-v0/RankingsSum/single_sumatoria.json"
 
@@ -24,20 +24,20 @@ for cat in cats:
 with open(wca_ranks_file, "r", encoding="utf-8") as f:
     wca_ranks = json.load(f)
 
-# diccionario: (personId, eventId) -> rank info
-wca_lookup = {(r["personId"], r["eventId"]): r for r in wca_ranks}
+# diccionario: (person_id, event_id) -> rank info
+wca_lookup = {(r["person_id"], r["event_id"]): r for r in wca_ranks}
 
 # 📌 Cargar persons.json para obtener gender
 with open(persons_file, "r", encoding="utf-8") as f:
     persons_data = json.load(f)
 
-gender_lookup = {p["id"]: p.get("gender") for p in persons_data}
+gender_lookup = {p["wca_id"]: p.get("gender") for p in persons_data}
 
 # 📌 Todas las personas que aparecen en algún evento
 persons = set()
 for cat in cats:
     for record in rankings[cat]:
-        persons.add(record["personId"])
+        persons.add(record["person_id"])
 
 # 📌 Construir sumatoria
 sumatoria = []
@@ -53,18 +53,18 @@ for pid in persons:
 
     for cat in cats:
         # buscar en ranking local
-        records = [r for r in rankings[cat] if r["personId"] == pid]
+        records = [r for r in rankings[cat] if r["person_id"] == pid]
         if records:
             record = records[0]  # ya está ordenado por mejor
-            country_rank = wca_lookup.get((pid, cat), {}).get("countryRank")
+            country_rank = wca_lookup.get((pid, cat), {}).get("country_rank")
 
             if not person_data["personName"]:
-                person_data["personName"] = record.get("personName", "")
+                person_data["personName"] = record.get("person_name", "")
 
             person_data["categories"].append({
                 "eventId": cat,
                 "best": record.get("best"),
-                "competitionId": record.get("competitionId"),
+                "competitionId": record.get("competition_id"),
                 "competitionName": record.get("competitionName"),
                 "competitionCountryIso": record.get("competitionCountryIso"),
                 "countryRank": int(country_rank) if country_rank else None

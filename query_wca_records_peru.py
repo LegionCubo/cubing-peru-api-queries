@@ -28,10 +28,10 @@ def get_all_best(data, mode):
     result = []
     for d in best_list:
         result.append({
-            "personId": d.get("personId"),
-            "personName": d.get("personName"),
+            "personId": d.get("person_id"),
+            "personName": d.get("person_name"),
             mode: d.get(mode),
-            "competitionId": d.get("competitionId"),
+            "competitionId": d.get("competition_id"),
             "competitionName": d.get("competitionName"),
             "competitionCountryIso": d.get("competitionCountryIso"),
             "gender": d.get("gender"),
@@ -61,10 +61,10 @@ def get_all_best_by_gender(data, gender, mode):
     result = []
     for d in best_list:
         result.append({
-            "personId": d.get("personId"),
-            "personName": d.get("personName"),
+            "personId": d.get("person_id"),
+            "personName": d.get("person_name"),
             mode: d.get(mode),
-            "competitionId": d.get("competitionId"),
+            "competitionId": d.get("competition_id"),
             "competitionName": d.get("competitionName"),
             "competitionCountryIso": d.get("competitionCountryIso"),
             "times": [

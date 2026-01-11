@@ -15,7 +15,7 @@ with open(persons_file, "r", encoding="utf-8") as pf:
     persons = json.load(pf)
 
 # Crear diccionario {id -> person}
-persons_dict = {p["id"]: p for p in persons}
+persons_dict = {p["wca_id"]: p for p in persons}
 
 # Contadores
 organiser_count = defaultdict(int)

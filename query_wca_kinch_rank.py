@@ -58,11 +58,11 @@ for cat in cats:
 persons = set()
 for cat in cats:
     for r in rankings_avg.get(cat, []):
-        if r.get("personId"):
-            persons.add(r["personId"])
+        if r.get("person_id"):
+            persons.add(r["person_id"])
     for r in rankings_single.get(cat, []):
-        if r.get("personId"):
-            persons.add(r["personId"])
+        if r.get("person_id"):
+            persons.add(r["person_id"])
 
 # ---------------- CALCULO ----------------
 
@@ -85,29 +85,29 @@ for pid in persons:
         personal_mean = None
 
         if cat == '333mbf':
-            recs = [r for r in rankings_single[cat] if r["personId"] == pid]
+            recs = [r for r in rankings_single[cat] if r["person_id"] == pid]
             if recs:
                 record = recs[0]
                 personal = safe_int(record.get("best"))
         elif cat in single_or_mean:
-            recs_single = [r for r in rankings_single[cat] if r["personId"] == pid]
+            recs_single = [r for r in rankings_single[cat] if r["person_id"] == pid]
             if recs_single:
                 record = recs_single[0]
                 personal = safe_int(record.get("best"))
 
-            recs = [r for r in rankings_avg[cat] if r["personId"] == pid]
+            recs = [r for r in rankings_avg[cat] if r["person_id"] == pid]
             if recs:
                 record = recs[0]
                 personal_mean = safe_int(record.get("average"))
         else:
-            recs = [r for r in rankings_avg[cat] if r["personId"] == pid]
+            recs = [r for r in rankings_avg[cat] if r["person_id"] == pid]
             if recs:
                 record = recs[0]
                 personal_mean = safe_int(record.get("average"))
 
         # Guardar nombre de una vez
         if record and not person_name:
-            person_name = record.get("personName", "")
+            person_name = record.get("person_name", "")
             gender = record.get("gender", "")
             country = record.get("competitionCountryIso", "")
 
@@ -139,7 +139,7 @@ for pid in persons:
         categories.append({
             "eventId": cat,
             "best": str(personal) if personal else None,
-            "competitionId": record.get("competitionId") if record else None,
+            "competitionId": record.get("competition_id") if record else None,
             "competitionName": record.get("competitionName") if record else None,
             "competitionCountryIso": record.get("competitionCountryIso") if record else None,
             "countryRank": int(record.get("countryRank")) if record and record.get("countryRank") else None,

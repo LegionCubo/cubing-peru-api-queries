@@ -6,7 +6,7 @@ from datetime import date
 
 cats = ["222","333","333bf", "333fm", "333ft", "333mbf", "333mbo", "333oh","444", "444bf", "555", "555bf", "666", "777", "clock", "magic", "minx", "mmagic", "pyram", "skewb", "sq1"]
 
-input_file = "./../cubing-peru-api-v0/Results/results.json"
+input_file = "./../cubing-peru-api-v0/Results/merge_results.json"
 competitions_file = "./../cubing-peru-api-v0/Competitions/competitions_prueba.json"
 persons_file = "./../cubing-peru-api-v0/Persons/persons.json"
 
@@ -16,7 +16,7 @@ with open(competitions_file, "r", encoding="utf-8") as f:
 
 # 📌 Cargar personas en memoria para lookup rápido (por personId)
 with open(persons_file, "r", encoding="utf-8") as f:
-    persons = {p["id"]: p for p in json.load(f)}
+    persons = {p["wca_id"]: p for p in json.load(f)}
 
 folder = f"./../cubing-peru-api-v0/Results/single"
 os.makedirs(folder, exist_ok=True)
@@ -27,7 +27,7 @@ for cat in cats:
     filtered_records = []
     with open(input_file, "rb") as f:
         for record in ijson.items(f, "item"):
-            if record.get("eventId") == cat:
+            if record.get("event_id") == cat:
 
                 single = int(record.get("best", -1))
 
@@ -35,17 +35,17 @@ for cat in cats:
                 if single in (-1, 0):
                     continue
 
-                comp_id = record.get("competitionId")
+                comp_id = record.get("competition_id")
                 comp = competitions.get(comp_id, {})
 
                 # añadir datos extra de competition
                 record["competitionName"] = comp.get("name", "")
-                record["cityName"] = comp.get("cityName", "")
+                record["cityName"] = comp.get("city_name", "")
                 record["competitionDate"] = comp.get("competitionDate", "")
                 record["competitionCountryIso"] = comp.get("countryIso","")
 
                 # añadir gender desde persons.json
-                pid = record.get("personId")
+                pid = record.get("person_id")
                 record["gender"] = persons.get(pid, {}).get("gender", "")
 
                 filtered_records.append(record)
