@@ -13,7 +13,7 @@ scripts = [
     "query_wca_results_peru_average_for_cat.py",
     "query_wca_rank_peru.py",
     "query_wca_rank_sum_single_peru.py",
-    "query_wca_rank_sum_average_peru.py",#
+    "query_wca_rank_sum_average_peru.py",
     "query_wca_persons_peru_segundo_paso.py",
     "query_wca_persons_delegates_peru.py",
     "query_wca_persons_organisers_peru.py",
