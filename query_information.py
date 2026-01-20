@@ -56,6 +56,8 @@ def build_info():
                 "dayDate": int(day),            # <-- Nuevo campo
             })
 
+    upcoming.sort(key=lambda x: x["competitionDate"])
+
     # 6. rankingNational → first 5 based on 333 single ranking
     ranking_national = []
     for r in ranking_333[:5]:

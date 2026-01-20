@@ -19,6 +19,7 @@ scripts = [
     "query_wca_persons_organisers_peru.py",
     "query_wca_records_peru.py",
     "query_wca_kinch_rank.py",
+    "query_information.py",
 ]
 
 for script in scripts:

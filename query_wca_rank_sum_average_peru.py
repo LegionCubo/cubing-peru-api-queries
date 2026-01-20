@@ -71,7 +71,7 @@ for pid in persons:
 
             person_data["categories"].append({
                 "eventId": cat,
-                "best": record.get("average"),
+                "average": record.get("average"),
                 "competitionId": record.get("competition_id"),
                 "competitionName": record.get("competitionName"),
                 "competitionCountryIso": record.get("competitionCountryIso"),
